@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DotNetCore.EntityFrameworkCore.GaussDB" Version="10.0.0" />
+    <PackageReference Include="EFCore.BulkExtensions" Version="10.0.0" />
+  </ItemGroup>
+
 </Project>
