@@ -36,5 +36,32 @@ namespace EFCore.BulkExtensions.GaussDB.SqlAdapters.GaussDB
         {
             ((GaussDBParameter)parameter).GaussDBDbType = (GaussDBDbType)dbType;
         }
+
+        #region DDL
+        public static string DropTableUseCascade(string tableName, bool isCascadeDelete = false)
+        {
+            var sql = string.Empty;
+
+            if (isCascadeDelete)
+            {
+                sql = $"DROP TABLE IF EXISTS {tableName} CASCADE CONSTRAINTS PURGE";
+            }
+            else
+            {
+                sql = $"DROP TABLE IF EXISTS {tableName} PURGE";
+            }
+
+            return sql;
+        }
+
+        /// <summary>
+        /// Drop会删除表的结构及其数据，和该表相关的索引、触发器和权限
+        /// 在Navicat中实验使用DROP [TEMPORARY] TABLE报错，故直接去除isTempTable操作
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="isTempTable"></param>
+        /// <returns></returns>
+        public override string DropTable(string tableName, bool isTempTable) => DropTableUseCascade(tableName);
+        #endregion
     }
 }
