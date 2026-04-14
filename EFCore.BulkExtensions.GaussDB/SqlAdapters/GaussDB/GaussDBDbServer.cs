@@ -1,5 +1,10 @@
 ﻿using EFCore.BulkExtensions.SqlAdapters;
+using EFCore.BulkExtensions.SqlAdapters.PostgreSql;
+using GaussDB.EntityFrameworkCore.PostgreSQL.Metadata;
+using GaussDB.EntityFrameworkCore.PostgreSQL.Metadata.Internal;
+using Humanizer;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,19 +13,26 @@ namespace EFCore.BulkExtensions.GaussDB.SqlAdapters.GaussDB
 {
     public class GaussDBDbServer : IDbServer
     {
-        public SqlType Type => throw new NotImplementedException();
+        // 后续 fork EFCore.BulkExtensions 试试
+        public SqlType Type => SqlType.PostgreSql;
 
-        public ISqlOperationsAdapter Adapter => throw new NotImplementedException();
+        private GaussDBAdapter _adapter = new();
 
-        public IQueryBuilderSpecialization Dialect => throw new NotImplementedException();
+        public ISqlOperationsAdapter Adapter => _adapter;
 
-        public SqlQueryBuilder QueryBuilder => throw new NotImplementedException();
+        private GaussDBDialect _dialect = new();
 
-        public string ValueGenerationStrategy => throw new NotImplementedException();
+        public IQueryBuilderSpecialization Dialect => _dialect;
+
+        private SqlQueryBuilder _queryBuilder = new GaussDBQueryBuilder();
+
+        public SqlQueryBuilder QueryBuilder => _queryBuilder;
+
+        public string ValueGenerationStrategy => GaussDBAnnotationNames.ValueGenerationStrategy;
 
         public bool PropertyHasIdentity(IAnnotation annotation)
         {
-            throw new NotImplementedException();
+            return (GaussDBValueGenerationStrategy?)annotation.Value == GaussDBValueGenerationStrategy.IdentityByDefaultColumn;
         }
     }
 }

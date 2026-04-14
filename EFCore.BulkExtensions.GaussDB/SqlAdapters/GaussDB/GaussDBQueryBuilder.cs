@@ -1,4 +1,7 @@
 ﻿using EFCore.BulkExtensions.SqlAdapters;
+using GaussDB;
+using GaussDBTypes;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,17 +14,17 @@ namespace EFCore.BulkExtensions.GaussDB.SqlAdapters.GaussDB
     {
         public override DbCommand CreateCommand()
         {
-            throw new NotImplementedException();
+            return new GaussDBCommand();
         }
 
         public override DbParameter CreateParameter(string parameterName, object? parameterValue = null)
         {
-            throw new NotImplementedException();
+            return new GaussDBParameter(parameterName, parameterValue);
         }
 
         public override DbType Dbtype()
         {
-            throw new NotImplementedException();
+            return (DbType)GaussDBDbType.Jsonb;
         }
 
         public override string RestructureForBatch(string sql, bool isDelete = false)
@@ -31,7 +34,7 @@ namespace EFCore.BulkExtensions.GaussDB.SqlAdapters.GaussDB
 
         public override void SetDbTypeParam(DbParameter parameter, DbType dbType)
         {
-            throw new NotImplementedException();
+            ((GaussDBParameter)parameter).GaussDBDbType = (GaussDBDbType)dbType;
         }
     }
 }
